@@ -10,7 +10,7 @@ stages {
         }
     stage('Push to Docker Registry'){
         steps{
-    sh '''withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+    sh '''withCredentials(\[usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         pushToImage(CONTAINER_NAME, CONTAINER_TAG, USERNAME, PASSWORD)}'''
         }}
     stage('Install') {          
