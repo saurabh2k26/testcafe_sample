@@ -3,9 +3,9 @@ agent any
 stages {
     stage('Initialize'){
         steps {
-            script { def dockerHome = tool "myDocker" }
+            script { def dockerHome = tool "myDocker" 
             sh "env.PATH = \"${dockerHome}/bin:${env.PATH}\""
-        }
+                   }}
         }
     stage('Push to Docker Registry'){
         steps {
