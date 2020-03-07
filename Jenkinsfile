@@ -11,17 +11,6 @@ stages {
                     sh "echo \"env.PATH = \"${dockerHome}/bin:${env.PATH}\"\""
                    }}
         }
-    stage("Image Prune"){
-        steps {
-        imagePrune(CONTAINER_NAME)
-        }
-    }
-
-    stage('Image Build'){
-        steps {
-        imageBuild(CONTAINER_NAME, CONTAINER_TAG)
-        }
-    }
     stage('Push to Docker Registry'){
         steps {
             withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')] {
