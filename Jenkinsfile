@@ -1,7 +1,5 @@
 pipeline {
-
     agent any
-
     stages {
         stage('Initialize'){
             def dockerHome = tool 'myDocker'
