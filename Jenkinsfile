@@ -14,14 +14,6 @@ node {
         checkout scm
     }
 
-    stage("Image Prune"){
-        imagePrune(CONTAINER_NAME)
-    }
-
-    stage('Image Build'){
-        imageBuild(CONTAINER_NAME, CONTAINER_TAG)
-    }
-
     stage('Push to Docker Registry'){
         withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             pushToImage(CONTAINER_NAME, CONTAINER_TAG, USERNAME, PASSWORD)
