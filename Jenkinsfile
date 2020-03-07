@@ -4,7 +4,8 @@ stages {
     stage('Initialize'){
         steps {
             script { def dockerHome = tool "myDocker" }
-            script { env.PATH = "${dockerHome}/bin:${env.PATH}" }}
+            env.PATH = "${dockerHome}/bin:${env.PATH}" 
+        }
         }
     stage('Push to Docker Registry'){
         steps {
