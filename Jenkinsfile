@@ -13,7 +13,7 @@ stages {
         }
     stage("Image Prune"){
         steps {
-        imagePrune(CONTAINER_NAME)
+        sh "imagePrune(CONTAINER_NAME)"
         }
     }
 
