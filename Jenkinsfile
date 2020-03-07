@@ -1,38 +1,40 @@
 def CONTAINER_NAME="jenkins-pipeline"
 def CONTAINER_TAG="latest"
-def DOCKER_HUB_USER="hakdogan"
-def HTTP_PORT="8090"
 
-node {
-
+pipeline {
+agent any
+stages {
     stage('Initialize'){
-        def dockerHome = tool 'myDocker'
-        env.PATH = "${dockerHome}/bin:${env.PATH}"
-    }
-
-    stage('Checkout') {
-        checkout scm
-    }
-
-    stage("Image Prune"){
-        imagePrune(CONTAINER_NAME)
-    }
-
-    stage('Image Build'){
-        imageBuild(CONTAINER_NAME, CONTAINER_TAG)
-    }
-
-    stage('Push to Docker Registry'){
-        withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            pushToImage(CONTAINER_NAME, CONTAINER_TAG, USERNAME, PASSWORD)
+        steps {
+            script { def dockerHome = tool "myDocker" 
+                    sh "echo \"env.PATH = ${env.PATH}\""
+                    sh "echo \"env.PATH = \"${dockerHome}/bin:${env.PATH}\"\""
+                   }}
         }
-    }
+    stage('Push to Docker Registry'){
+        steps {
+            withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                pushToImage(CONTAINER_NAME, CONTAINER_TAG, USERNAME, PASSWORD) }
+                            }
+                            }
+    stage('Install') {          
+            agent {
+                docker {
+                    image 'node:10.11'
+                    reuseNode true
+                }
+            }
+            environment {
+                HOME = '.'
+            }
 
-    stage('Run App'){
-        runApp(CONTAINER_NAME, CONTAINER_TAG, DOCKER_HUB_USER, HTTP_PORT)
-    }
-
-}
+            steps {
+                sh 'npm config set unsafe-perm true'                
+                sh 'npm install testcafe-reporter-html'
+                sh 'npm install testcafe-reporter-junit'
+            }           
+        }
+}}
 
 def imagePrune(containerName){
     try {
