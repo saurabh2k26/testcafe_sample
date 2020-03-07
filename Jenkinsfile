@@ -14,10 +14,6 @@ node {
         checkout scm
     }
 
-    stage('Build'){
-        sh "mvn clean install"
-    }
-
     stage("Image Prune"){
         imagePrune(CONTAINER_NAME)
     }
