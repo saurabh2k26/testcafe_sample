@@ -11,13 +11,23 @@ stages {
                     sh "echo \"env.PATH = \"${dockerHome}/bin:${env.PATH}\"\""
                    }}
         }
+    stage("Image Prune"){
+        steps {
+        imagePrune(CONTAINER_NAME)
+        }
+    }
+
+    stage('Image Build'){
+        steps {
+        imageBuild(CONTAINER_NAME, CONTAINER_TAG)
+        }
+    }
     stage('Push to Docker Registry'){
         steps {
-            script {
-        withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')])
-            { pushToImage(CONTAINER_NAME, CONTAINER_TAG, USERNAME, PASSWORD) }
+            withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')] {
+                pushToImage(CONTAINER_NAME, CONTAINER_TAG, USERNAME, PASSWORD)
             }
-        }}
+        }
     stage('Install') {          
             agent {
                 docker {
