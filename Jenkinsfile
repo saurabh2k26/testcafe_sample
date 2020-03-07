@@ -13,8 +13,10 @@ stages {
         }
     stage('Push to Docker Registry'){
         steps {
+            script {
         withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')])
             { pushToImage(CONTAINER_NAME, CONTAINER_TAG, USERNAME, PASSWORD) }
+            }
         }}
     stage('Install') {          
             agent {
