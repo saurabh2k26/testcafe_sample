@@ -40,8 +40,8 @@ def imageBuild(containerName, tag){
 
 def pushToImage(containerName, tag, dockerUser, dockerPassword){
     sh "docker login -u $dockerUser -p $dockerPassword"
-    sh "docker --privileged=true tag $containerName:$tag $dockerUser/$containerName:$tag"
-    sh "docker --privileged=true push $dockerUser/$containerName:$tag"
+    sh "docker tag --privileged $containerName:$tag $dockerUser/$containerName:$tag"
+    sh "docker push --privileged $dockerUser/$containerName:$tag"
     echo "Image push complete"
 }
 
